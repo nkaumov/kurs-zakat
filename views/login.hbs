@@ -1,17 +1,16 @@
-{{! File: views/login.hbs }}
 <h4>Вход в систему</h4>
 
 {{#if error}}
-  <div class="card-panel red lighten-2">{{error}}</div>
+<div class="card-panel red lighten-2">{{error}}</div>
 {{/if}}
 
 <form action="/auth/login" method="POST">
   <div class="input-field">
-    <input type="text" name="username" id="username" required>
+    <input type="text" name="username" id="username" required />
     <label for="username">Логин</label>
   </div>
   <div class="input-field">
-    <input type="password" name="password" id="password" required>
+    <input type="password" name="password" id="password" required />
     <label for="password">Пароль</label>
   </div>
   <button class="btn">Войти</button>

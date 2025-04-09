@@ -1,0 +1,29 @@
+<h4>Заявка №{{request.request_number}}</h4>
+<p><strong>Дата создания:</strong> {{request.created_at}}</p>
+<p><strong>Статус:</strong> {{request.status}}</p>
+
+<h5>Состав заявки:</h5>
+
+{{#if items.length}}
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Продукт</th>
+        <th>Количество</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each items}}
+      <tr>
+        <td>{{product_name}}</td>
+        <td>{{quantity}}</td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>⚠️ Состав не найден или пуст.</p>
+{{/if}}
+
+<br/>
+<a href="/manager/requests" class="btn">Назад к списку заявок</a>

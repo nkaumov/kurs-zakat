@@ -1,4 +1,4 @@
-// File: config/session.js
+// config/session.js
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
 
@@ -13,7 +13,7 @@ const options = {
 const sessionStore = new MySQLStore(options);
 
 module.exports = session({
-  key: 'my_session_cookie',
+  key: 'kursovaya_session_cookie',
   secret: process.env.SESSION_SECRET || 'secret_key',
   store: sessionStore,
   resave: false,

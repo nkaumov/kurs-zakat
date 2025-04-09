@@ -1,7 +1,7 @@
-{{! File: views/dashboard_chef.hbs }}
 <h4>Кабинет шефа</h4>
 
 {{#if requests}}
+  <h5>Мои заявки</h5>
   <table class="striped">
     <thead>
       <tr>
@@ -21,55 +21,50 @@
     </tbody>
   </table>
 {{else}}
-  <p>Пока нет созданных заявок.</p>
+  <p>Нет заявок</p>
 {{/if}}
 
-<!-- Пример иконки Materialize для создания заявки -->
-<br />
-<a href="/requests/create" class="btn-floating btn-large red">
+<!-- Кнопка для создания заявки -->
+<br/>
+<a href="/requests/create" class="btn-floating btn-large red" title="Создать заявку">
   <i class="material-icons">add</i>
 </a>
 
 {{#if createMode}}
   <h5>Создать новую заявку</h5>
   <form action="/requests/create" method="POST" id="createRequestForm">
-    <!-- Допустим, у нас будет js для динамического добавления позиций -->
     <div id="positionsContainer">
       <div class="row">
         <div class="input-field col s6">
-          <input type="text" name="positions[0][product_name]" placeholder="Наименование продукта" required />
+          <input type="text" name="product_name[]" placeholder="Название продукта" required />
         </div>
         <div class="input-field col s2">
-          <input type="number" name="positions[0][quantity]" placeholder="Кол-во" required />
+          <input type="number" name="quantity[]" placeholder="Количество" required />
         </div>
       </div>
     </div>
-
-    <button type="button" class="btn" id="addPositionBtn">Добавить позицию</button>
-    <button type="submit" class="btn">Создать заявку</button>
+    <button type="button" class="btn blue" id="addPositionBtn">Добавить позицию</button>
+    <button type="submit" class="btn green">Создать заявку</button>
   </form>
-{{/if}}
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-  const positionsContainer = document.getElementById('positionsContainer');
-  const addPositionBtn = document.getElementById('addPositionBtn');
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const positionsContainer = document.getElementById('positionsContainer');
+    const addPositionBtn = document.getElementById('addPositionBtn');
 
-  let positionIndex = 1;
-
-  addPositionBtn.addEventListener('click', () => {
-    const row = document.createElement('div');
-    row.className = 'row';
-    row.innerHTML = `
-      <div class="input-field col s6">
-        <input type="text" name="positions[${positionIndex}][product_name]" placeholder="Наименование продукта" required />
-      </div>
-      <div class="input-field col s2">
-        <input type="number" name="positions[${positionIndex}][quantity]" placeholder="Кол-во" required />
-      </div>
-    `;
-    positionsContainer.appendChild(row);
-    positionIndex++;
+    addPositionBtn.addEventListener('click', () => {
+      const row = document.createElement('div');
+      row.className = 'row';
+      row.innerHTML = `
+        <div class="input-field col s6">
+          <input type="text" name="product_name[]" placeholder="Название продукта" required />
+        </div>
+        <div class="input-field col s2">
+          <input type="number" name="quantity[]" placeholder="Количество" required />
+        </div>
+      `;
+      positionsContainer.appendChild(row);
+    });
   });
-});
-</script>
+  </script>
+{{/if}}

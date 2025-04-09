@@ -1,9 +1,9 @@
-// File: routes/requests.js
+// routes/requests.js
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/db');
 
-// Middleware для проверки, что пользователь залогинен и что он шеф или менеджер
+// Проверка на авторизацию
 function ensureAuth(req, res, next) {
   if (!req.session.user) {
     return res.redirect('/auth/login');
@@ -11,16 +11,16 @@ function ensureAuth(req, res, next) {
   next();
 }
 
-// GET /requests - список всех заявок
+// (Можно добавить: ensureChef — если хотим, чтобы создавать заявки мог только шеф)
+
 router.get('/', ensureAuth, async (req, res) => {
   try {
+    // Если хотим показывать заявки, созданные именно этим шефом:
+    //   WHERE created_by = req.session.user.user_id
+    // Пока покажем все, чтобы было проще тестировать
     const [requests] = await pool.query(
-      `SELECT * FROM requests ORDER BY created_at DESC`
+      'SELECT * FROM requests ORDER BY created_at DESC'
     );
-
-    // Пример: на фронте можно фильтровать заявки конкретного шефа или показывать все
-    // Если нужно показывать только те, что созданы этим шефом:
-    // WHERE created_by = ?
 
     res.render('dashboard_chef', {
       user: req.session.user,
@@ -34,38 +34,47 @@ router.get('/', ensureAuth, async (req, res) => {
 
 // GET /requests/create - форма создания заявки
 router.get('/create', ensureAuth, (req, res) => {
+  // Проверим роль (при желании)
+  // if (req.session.user.role !== 'chef') {
+  //   return res.send('Только шеф может создавать заявки');
+  // }
+
   res.render('dashboard_chef', {
     user: req.session.user,
     createMode: true
   });
 });
 
-// POST /requests/create - обработка создания заявки
+// POST /requests/create
 router.post('/create', ensureAuth, async (req, res) => {
-  // Предположим, что formData передаёт массив продуктов, etc.
-  // Пример простого варианта: product_name, quantity
-  // или массив вида positions = [{product_name, quantity}, {...}]
-  const { positions } = req.body; 
-  // positions может быть JSON-строкой, которую парсим и т. д.
+  let product_names = req.body['product_name[]'] || req.body.product_name;
+  let quantities = req.body['quantity[]'] || req.body.quantity;
+
+  // Приводим к массиву
+  if (!Array.isArray(product_names)) product_names = [product_names];
+  if (!Array.isArray(quantities)) quantities = [quantities];
+
+  // Собираем позиции и убираем пустые
+  const positions = product_names.map((name, index) => ({
+    product_name: name.trim(),
+    quantity: parseInt(quantities[index], 10) || 0
+  })).filter(p => p.product_name !== '' && p.quantity > 0);
 
   try {
-    // 1) Создаём "шапку" заявки
-    const requestNumber = `REQ-${Date.now()}`; // упрощённо
+    const requestNumber = `REQ-${Date.now()}`;
     const [result] = await pool.query(
-      `INSERT INTO requests (request_number, created_by) VALUES (?, ?)`,
+      `INSERT INTO requests (request_number, created_by)
+       VALUES (?, ?)`,
       [requestNumber, req.session.user.user_id]
     );
     const requestId = result.insertId;
 
-    // 2) Создаём позиции
-    if (Array.isArray(positions)) {
-      for (const item of positions) {
-        await pool.query(
-          `INSERT INTO request_items (request_id, product_name, quantity)
-           VALUES (?, ?, ?)`,
-          [requestId, item.product_name, item.quantity]
-        );
-      }
+    // Вставляем позиции заявки
+    for (const item of positions) {
+      await pool.query(`
+        INSERT INTO request_items (request_id, product_name, quantity)
+        VALUES (?, ?, ?)
+      `, [requestId, item.product_name, item.quantity]);
     }
 
     res.redirect('/requests');
@@ -74,5 +83,7 @@ router.post('/create', ensureAuth, async (req, res) => {
     res.send('Ошибка при создании заявки');
   }
 });
+
+
 
 module.exports = router;

@@ -1,0 +1,74 @@
+<h4>График</h4>
+
+{{#if pickMonthYearMode}}
+  <p>Выберите месяц и год:</p>
+  <form action="/manager/schedule" method="GET">
+    <div class="input-field">
+      <input type="number" name="month" placeholder="Месяц (1..12)" required />
+    </div>
+    <div class="input-field">
+      <input type="number" name="year" placeholder="Год (например, 2025)" required />
+    </div>
+    <button class="btn">Открыть/Создать график</button>
+  </form>
+
+{{else}}
+
+  <p>График на {{schedule.schedule_month}}/{{schedule.schedule_year}} (статус: {{schedule.status}})</p>
+
+  {{#if isClosed}}
+    <p>⚠️ График закрыт для редактирования</p>
+  {{/if}}
+
+  <form action="/manager/schedule" method="POST">
+    <input type="hidden" name="schedule_id" value="{{schedule.schedule_id}}" />
+    <input type="hidden" name="daysInMonth" value="{{daysInMonth}}" />
+    <input type="hidden" name="employeeCount" value="{{employees.length}}" />
+
+    <table class="striped">
+      <thead>
+        <tr>
+          <th>Сотрудник</th>
+          {{#each (range 1 daysInMonth) as |day|}}
+            <th>{{day}}</th>
+          {{/each}}
+        </tr>
+      </thead>
+      <tbody>
+        {{#each employees as |employee|}}
+          <tr>
+            <td>{{employee.full_name}}</td>
+            {{#each (range 1 ../daysInMonth) as |day|}}
+              <td>
+                {{#if ../isClosed}}
+                  {{!-- Просто вывод значения --}}
+                  {{lookup (lookup ../../hoursMap employee.employee_id) day}}
+                {{else}}
+                  <input 
+                    type="number" 
+                    name="hours[{{employee.employee_id}}][{{day}}]" 
+                    value="{{lookup (lookup ../../hoursMap employee.employee_id) day}}" 
+                    min="0" max="16" 
+                    style="width:50px;" 
+                  />
+                {{/if}}
+              </td>
+            {{/each}}
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    {{#unless isClosed}}
+      <button type="submit" class="btn">Сохранить</button>
+    {{/unless}}
+  </form>
+
+  {{#unless isClosed}}
+    <form action="/manager/schedule/close" method="POST" style="margin-top: 10px;">
+      <input type="hidden" name="schedule_id" value="{{schedule.schedule_id}}" />
+      <button class="btn red">Закрыть график</button>
+    </form>
+  {{/unless}}
+
+{{/if}}

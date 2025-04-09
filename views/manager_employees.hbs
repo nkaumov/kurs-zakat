@@ -1,0 +1,54 @@
+{{!-- views/manager_employees.hbs --}}
+<h4>Персонал</h4>
+
+{{#if employeesList}}
+  <h5>Список сотрудников</h5>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>ФИО</th>
+        <th>Должность</th>
+        <th>Паспорт</th>
+        <th>Телефон</th>
+      </tr>
+    </thead>
+    <tbody>
+     {{#each employeesList}}
+<tr>
+  <td>{{employee_id}}</td>
+  <td>{{full_name}}</td>
+  <td>{{position}}</td>
+  <td>{{passport_data}}</td>
+  <td>{{phone_number}}</td>
+  <td>
+    <form action="/manager/employees/delete" method="POST" style="display:inline;">
+      <input type="hidden" name="employee_id" value="{{employee_id}}" />
+      <button class="btn red" onclick="return confirm('Удалить этого сотрудника?')">Удалить</button>
+    </form>
+  </td>
+</tr>
+{{/each}}
+
+    </tbody>
+  </table>
+{{else}}
+  <p>Сотрудники не найдены</p>
+{{/if}}
+
+<h5>Добавить нового сотрудника</h5>
+<form action="/manager/employees/add" method="POST">
+  <div class="input-field">
+    <input type="text" name="full_name" placeholder="ФИО" required/>
+  </div>
+  <div class="input-field">
+    <input type="text" name="position" placeholder="Должность" required/>
+  </div>
+  <div class="input-field">
+    <input type="text" name="passport_data" placeholder="Паспортные данные (необязательно)"/>
+  </div>
+  <div class="input-field">
+    <input type="text" name="phone_number" placeholder="Телефон (необязательно)"/>
+  </div>
+  <button class="btn">Добавить</button>
+</form>

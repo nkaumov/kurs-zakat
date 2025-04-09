@@ -1,0 +1,12 @@
+<h4>Отчёт по часам</h4>
+
+<p>Выберите месяц/год:</p>
+<form action="/manager/report/hours" method="POST">
+  <div class="input-field">
+    <input type="number" name="month" placeholder="Месяц" required/>
+  </div>
+  <div class="input-field">
+    <input type="number" name="year" placeholder="Год" required/>
+  </div>
+  <button class="btn">Сформировать отчёт (CSV)</button>
+</form>
