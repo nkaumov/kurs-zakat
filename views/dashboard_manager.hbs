@@ -1,0 +1,51 @@
+{{! File: views/dashboard_manager.hbs }}
+<h4>Кабинет менеджера</h4>
+
+{{#if requests}}
+  <h5>Список заявок</h5>
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Номер</th>
+        <th>Дата</th>
+        <th>Статус</th>
+        <th>Действия</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each requests}}
+      <tr>
+        <td>{{request_number}}</td>
+        <td>{{created_at}}</td>
+        <td>{{status}}</td>
+        <td>
+          <form action="/manager/update-status" method="POST" style="display:inline;">
+            <input type="hidden" name="request_id" value="{{request_id}}" />
+            <select name="new_status">
+              <option value="created" {{#if (eq status "created")}}selected{{/if}}>Создана</option>
+              <option value="accepted" {{#if (eq status "accepted")}}selected{{/if}}>Принята</option>
+              <option value="declined" {{#if (eq status "declined")}}selected{{/if}}>Отклонена</option>
+              <option value="completed" {{#if (eq status "completed")}}selected{{/if}}>Завершена</option>
+            </select>
+            <button type="submit" class="btn">OK</button>
+          </form>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{/if}}
+
+<br/>
+<!-- кнопка создания заявки со стороны менеджера -->
+<a href="/requests/create" class="btn-floating btn-large red">
+  <i class="material-icons">add</i>
+</a>
+
+<hr />
+
+<!-- Здесь дальше можно добавить ссылки/формы для:
+     - Персонал
+     - Сформировать отчёт
+     - Сформировать график
+     и т.д. -->

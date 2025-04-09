@@ -1,0 +1,14 @@
+<nav>
+  <div class="nav-wrapper">
+    <a href="#" class="brand-logo">My Restaurant</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      {{#if user}}
+      <li><a href="/">Главная</a></li>
+      <li><a href="/auth/logout">Выйти ({{user.username}})</a></li>
+      {{else}}
+      <li><a href="/auth/login">Войти</a></li>
+      <li><a href="/auth/register">Регистрация</a></li>
+      {{/if}}
+    </ul>
+  </div>
+</nav>

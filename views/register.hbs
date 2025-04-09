@@ -1,0 +1,32 @@
+{{! File: views/register.hbs }}
+<h4>Регистрация</h4>
+
+{{#if error}}
+  <div class="card-panel red lighten-2">{{error}}</div>
+{{/if}}
+
+<form action="/auth/register" method="POST">
+  <div class="input-field">
+    <input type="text" name="username" id="username" required>
+    <label for="username">Логин</label>
+  </div>
+  <div class="input-field">
+    <input type="password" name="password" id="password" required>
+    <label for="password">Пароль</label>
+  </div>
+  <div class="input-field">
+    <select name="role">
+      <option value="chef">Chef</option>
+      <option value="manager">Manager</option>
+    </select>
+    <label>Роль</label>
+  </div>
+  <button class="btn">Зарегистрировать</button>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('select');
+  M.FormSelect.init(elems);
+});
+</script>
