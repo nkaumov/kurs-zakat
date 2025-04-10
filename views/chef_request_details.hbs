@@ -1,0 +1,24 @@
+<h5>Заявка №{{request.request_number}}</h5>
+<p><strong>Дата:</strong> {{request.created_at}}</p>
+<p><strong>Статус:</strong> {{request.status}}</p>
+
+<h6>Состав заявки:</h6>
+<table class="striped">
+  <thead>
+    <tr>
+      <th>Продукт</th>
+      <th>Количество</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each items}}
+    <tr>
+      <td>{{product_name}}</td>
+      <td>{{quantity}}</td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>
+
+<br/>
+<a href="javascript:history.back()" class="btn grey">Назад</a>

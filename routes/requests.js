@@ -84,6 +84,35 @@ router.post('/create', ensureAuth, async (req, res) => {
   }
 });
 
+// GET /requests/:id — просмотр состава заявки (только просмотр, без изменений)
+router.get('/:id', ensureAuth, async (req, res) => {
+  const requestId = req.params.id;
+
+  try {
+    const [[request]] = await pool.query(
+      `SELECT * FROM requests WHERE request_id = ?`,
+      [requestId]
+    );
+
+    if (!request) {
+      return res.send('Заявка не найдена');
+    }
+
+    const [items] = await pool.query(
+      `SELECT * FROM request_items WHERE request_id = ?`,
+      [requestId]
+    );
+
+    res.render('chef_request_details', {
+      user: req.session.user,
+      request,
+      items
+    });
+  } catch (err) {
+    console.error(err);
+    res.send('Ошибка при загрузке состава заявки');
+  }
+});
 
 
 module.exports = router;

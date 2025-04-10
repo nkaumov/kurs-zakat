@@ -3,26 +3,84 @@
 <head>
   <meta charset="UTF-8"/>
   <title>{{title}}</title>
-  <!-- Materialize CSS (CDN) -->
+
+  <!-- Materialize CSS -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"/>
   <link rel="stylesheet" href="/css/style.css"/>
+   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Underdog&display=swap" rel="stylesheet">
+<style>
+
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+
+    main {
+      display: flex;
+      min-height: calc(100vh - 64px); /* высота навбара */
+    }
+
+    .sidebar {
+      width: 220px;
+      background: #37474f ;
+      color: white;
+      padding: 20px;
+      flex-shrink: 0;
+    }
+
+    .sidebar a {
+      color: white;
+      display: flex;
+      align-items: center;
+      margin: 10px 0;
+    }
+
+    .sidebar a i {
+      margin-right: 10px;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
+
   {{> nav }}
 
-  <div class="container">
-    <!-- Кнопка "Назад" (работает через JS history.back()) -->
-    {{#if user}}
-      <div>
-        <a href="javascript:history.back()" class="btn grey">Назад</a>
+  {{#if (eq user.role "manager")}}
+    <main>
+      <!-- Sidebar -->
+      <div class="sidebar">
+        <h6 style="color: #ccc;">Меню</h6>
+        <a href="/manager/requests"><i class="material-icons">assignment</i> Заявки</a>
+        <a href="/manager/employees"><i class="material-icons">group</i> Персонал</a>
+        <a href="/manager/report/hours"><i class="material-icons">access_time</i> Отчёт по часам</a>
+        <a href="/manager/report/requests"><i class="material-icons">description</i> Отчёт по поставкам</a>
+        <a href="/manager/schedule"><i class="material-icons">calendar_today</i> График</a>
+        <a href="/manager/create-user"><i class="material-icons">person_add</i> Создать пользователя</a>
       </div>
-      <br/>
-    {{/if}}
 
-    {{{ body }}}
-  </div>
+      <!-- Контент -->
+      <div class="main-content">
+        {{{ body }}}
+      </div>
+    </main>
+  {{else}}
+    <!-- Для шефа или неавторизованных — просто контент -->
+    <div class="container" style="padding: 20px;">
+      {{{ body }}}
+    </div>
+  {{/if}}
 
-  <!-- Materialize JS (CDN) -->
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
   <script src="/js/script.js"></script>
 </body>

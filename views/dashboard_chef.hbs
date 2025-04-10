@@ -2,12 +2,13 @@
 
 {{#if requests}}
   <h5>Мои заявки</h5>
-  <table class="striped">
+  <table class="striped responsive-table">
     <thead>
       <tr>
         <th>Номер</th>
         <th>Дата</th>
         <th>Статус</th>
+        <th>Состав</th>
       </tr>
     </thead>
     <tbody>
@@ -16,6 +17,9 @@
         <td>{{request_number}}</td>
         <td>{{created_at}}</td>
         <td>{{status}}</td>
+        <td>
+          <a href="/requests/{{request_id}}" class="btn-small blue">Открыть</a>
+        </td>
       </tr>
       {{/each}}
     </tbody>
@@ -23,6 +27,7 @@
 {{else}}
   <p>Нет заявок</p>
 {{/if}}
+
 
 <!-- Кнопка для создания заявки -->
 <br/>

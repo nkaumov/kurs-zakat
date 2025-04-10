@@ -21,10 +21,11 @@
   {{/if}}
 
   <form action="/manager/schedule" method="POST">
-    <input type="hidden" name="schedule_id" value="{{schedule.schedule_id}}" />
-    <input type="hidden" name="daysInMonth" value="{{daysInMonth}}" />
-    <input type="hidden" name="employeeCount" value="{{employees.length}}" />
+  <input type="hidden" name="schedule_id" value="{{schedule.schedule_id}}" />
+  <input type="hidden" name="daysInMonth" value="{{daysInMonth}}" />
+  <input type="hidden" name="employeeCount" value="{{employees.length}}" />
 
+  <div style="overflow-x: auto; max-width: 100%;">
     <table class="striped">
       <thead>
         <tr>
@@ -41,7 +42,6 @@
             {{#each (range 1 ../daysInMonth) as |day|}}
               <td>
                 {{#if ../isClosed}}
-                  {{!-- Просто вывод значения --}}
                   {{lookup (lookup ../../hoursMap employee.employee_id) day}}
                 {{else}}
                   <input 
@@ -58,11 +58,13 @@
         {{/each}}
       </tbody>
     </table>
+  </div>
 
-    {{#unless isClosed}}
-      <button type="submit" class="btn">Сохранить</button>
-    {{/unless}}
-  </form>
+  {{#unless isClosed}}
+    <button type="submit" class="btn">Сохранить</button>
+  {{/unless}}
+</form>
+
 
   {{#unless isClosed}}
     <form action="/manager/schedule/close" method="POST" style="margin-top: 10px;">
