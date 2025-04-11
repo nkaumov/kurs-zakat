@@ -1,8 +1,8 @@
 /* File: public/css/style.css */
 body {
-  font-family: "Underdog", system-ui;
+
   /* background-color: #e0f2f1; */
   }
-.btn {
+.btn, .btn-small {
   background-color: #546e7a;
 }
